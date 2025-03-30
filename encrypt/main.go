@@ -35,7 +35,7 @@ func main() {
 	})
 
 	op := container.NewHBox(encrypt, decrypt)
-	c := container.NewVBox(kc, cc, op)
+	c := container.NewVBox(kc, cc, op, widget.NewLabel("加解密全在本机进行"))
 	w.SetContent(c)
 	w.ShowAndRun()
 }
