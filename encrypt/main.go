@@ -3,18 +3,22 @@ package main
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	_ "embed"
 	"encoding/base64"
 	"fmt"
+	"image/color"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"golang.org/x/crypto/argon2"
 )
 
 func main() {
 	a := app.New()
+	a.Settings().SetTheme(&myTheme{})
 	w := a.NewWindow("加解密")
 	w.Resize(fyne.NewSize(800, 800))
 
@@ -75,4 +79,27 @@ func handle(key, content *widget.Entry, encrypt bool) {
 		}
 		content.SetText(string(b))
 	}
+}
+
+type myTheme struct{}
+
+var _ fyne.Theme = (*myTheme)(nil)
+
+func (m myTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {
+	return theme.DefaultTheme().Color(name, variant)
+}
+
+func (m myTheme) Icon(name fyne.ThemeIconName) fyne.Resource {
+	return theme.DefaultTheme().Icon(name)
+}
+
+//go:embed ..\DingLieSongKeTi\dingliesongtypeface20241217-2.ttf
+var ttf []byte
+
+func (m myTheme) Font(style fyne.TextStyle) fyne.Resource {
+	return fyne.NewStaticResource("ttf", ttf)
+}
+
+func (m myTheme) Size(name fyne.ThemeSizeName) float32 {
+	return theme.DefaultTheme().Size(name)
 }
