@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/sha256"
 	_ "embed"
 	"encoding/base64"
 	"fmt"
@@ -45,7 +46,8 @@ func handle(key, content *widget.Entry, encrypt bool) {
 		key.SetText("请输入密钥")
 		return
 	}
-	aeskey := argon2.IDKey([]byte(key.Text), nil, 1, 64*1024, 4, 32)
+	salt := sha256.Sum256([]byte(key.Text))
+	aeskey := argon2.IDKey([]byte(key.Text), salt[:], 1, 64*1024, 4, 32)
 
 	if content.Text == "" {
 		if encrypt {
